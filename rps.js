@@ -33,35 +33,60 @@ function getHumanChoice(){
 }
 
 //3. Declare a winner and use variables to keep track of scores
+
+//4. Write a logic that allows the game to be played in rounds. 
+//   Increment score for winner of round
 let computerScore = 0;
 let humanScore = 0;
-
+let matchRound = 0;
 function gameRound(getComputerChoice, getHumanChoice){
-    let computerChoice = getComputerChoice();
-    let humanChoice = getHumanChoice();
+    let winnerFound = false;
+    let computerChoice;
+    let humanChoice;
 
-    if( computerChoice == humanChoice){
-        alert("Game was a tie");
-        gameRound(getComputerChoice, getHumanChoice);
+    while (!winnerFound){
+        computerChoice = getComputerChoice();
+        humanChoice = getHumanChoice();
+
+        if( computerChoice == humanChoice){
+            alert("Game was a tie");
+        }
+        else if(computerChoice == "rock" && humanChoice == "scissors"){
+            computerScore++;
+            winnerFound = true;
+        }
+        else if(computerChoice == "paper" && humanChoice == "rock"){
+            computerScore++;
+            winnerFound = true;
+        }
+        else if(computerChoice == "scissors" && humanChoice == "paper"){
+            computerScore++;
+            winnerFound = true;
+        }
+        else{
+            humanScore++
+            winnerFound = true;
+        }
     }
-    else if(computerChoice == "rock" && humanChoice == "scissors"){
-        computerScore++;
-    }
-    else if(computerChoice == "paper" && humanChoice == "rock"){
-        computerScore++;
-    }
-    else if(computerChoice == "scissors" && humanChoice == "paper"){
-        computerScore++;
-    }
-    else{
-        humanScore++
-    }
-    
+    matchRound++
+    alert(`Round ${matchRound} \n
+    You chose ${humanChoice} and the computer chose ${computerChoice} \n
+    Computer score: ${computerScore} Human score: ${humanScore}`);
 }
-gameRound(getComputerChoice, getHumanChoice);
-console.log(`Computer score: ${computerScore} \nHuman score: ${humanScore}`);
 
-//4. Write a logice that allows the game to be played in rounds. 
-//   Increment score for winner of round
 
-//5. Game will play 5 rounds and check for a winner
+//5. Game will play 5 rounds and check for a winner at the end (for loop)
+for (let i = 0; i < 5; i++) {
+    gameRound(getComputerChoice, getHumanChoice);
+  }
+
+switch (true){
+    case computerScore > humanScore:
+        alert(`Computer score: ${computerScore} Human score: ${humanScore}\n
+        Computer Wins!`);
+        break;
+    case computerScore < humanScore:
+        alert(`Computer score: ${computerScore} Human score: ${humanScore}\n
+        Human Wins!`);
+        break;
+}
