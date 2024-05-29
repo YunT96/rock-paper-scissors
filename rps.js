@@ -1,6 +1,34 @@
 console.log("Script Loaded");
 
-//1. Generate computer choice using math.floor and math.random
+const container = document.querySelector(".container")
+
+const rockBtn = document.querySelector(".rockBtn");
+rockBtn.addEventListener("click", () => {
+    console.log("Player Rock");
+    currentScore.textContent = "";
+    gameRound("rock");
+});
+
+const paperBtn = document.querySelector(".paperBtn");
+paperBtn.addEventListener("click", () => {
+    console.log("Player Paper");
+    currentScore.textContent = "";
+    gameRound("paper");
+});
+
+const scissorsBtn = document.querySelector(".scissorsBtn");
+scissorsBtn.addEventListener("click", () => {
+    console.log("Player Scissors");
+    currentScore.textContent = "";
+    gameRound("scissors");
+});
+
+const scoreBoard = document.querySelector(".scoreBoard");
+scoreBoard.textContent = "Game Loaded";
+
+const currentScore = document.querySelector(".currentScore");
+
+
 function getComputerChoice(){
     let comChoice = Math.floor(Math.random() * 3) + 1;
     
@@ -19,74 +47,42 @@ function getComputerChoice(){
     return comChoice;
 }
 
-//2. Use prompt to get user choice
-function getHumanChoice(){
-    let humanChoice = prompt("Enter your choice: rock, paper or scissors");
-    humanChoice = humanChoice.toLowerCase();
 
-    while (humanChoice != "rock" && humanChoice != "paper" && 
-    humanChoice != "scissors" ){
-        humanChoice = prompt("That was not an valid input. Try again: rock, paper or scissors");
-    }
-
-    return(humanChoice);
-}
-
-//3. Declare a winner and use variables to keep track of scores
-
-//4. Write a logic that allows the game to be played in rounds. 
-//   Increment score for winner of round
 let computerScore = 0;
 let humanScore = 0;
 let matchRound = 0;
-function gameRound(getComputerChoice, getHumanChoice){
-    let winnerFound = false;
-    let computerChoice;
-    let humanChoice;
+function gameRound(humanChoice){
+    const computerChoice = getComputerChoice();
 
-    while (!winnerFound){
-        computerChoice = getComputerChoice();
-        humanChoice = getHumanChoice();
-
-        if( computerChoice == humanChoice){
-            alert("Game was a tie");
-        }
-        else if(computerChoice == "rock" && humanChoice == "scissors"){
-            computerScore++;
-            winnerFound = true;
-        }
-        else if(computerChoice == "paper" && humanChoice == "rock"){
-            computerScore++;
-            winnerFound = true;
-        }
-        else if(computerChoice == "scissors" && humanChoice == "paper"){
-            computerScore++;
-            winnerFound = true;
-        }
-        else{
-            humanScore++
-            winnerFound = true;
-        }
+   if(computerChoice == "rock" && humanChoice == "scissors" ||
+        computerChoice == "paper" && humanChoice == "rock" ||
+        computerChoice == "scissors" && humanChoice == "paper"
+    ){
+        computerScore++;
+        
     }
+    else if (computerChoice !== humanChoice){
+        humanScore++
+    }
+
     matchRound++
-    alert(`Round ${matchRound} \n
-    You chose ${humanChoice} and the computer chose ${computerChoice} \n
-    Computer score: ${computerScore} Human score: ${humanScore}`);
+    currentScore.textContent = `Round ${matchRound} \n
+    You chose ${humanChoice} and the computer chose ${computerChoice}`;
+
+    scoreBoard.textContent = `Computer score: ${computerScore} Human score: ${humanScore}`;
+    checkWinner(humanScore, computerScore);
 }
 
 
-//5. Game will play 5 rounds and check for a winner at the end (for loop)
-for (let i = 0; i < 5; i++) {
-    gameRound(getComputerChoice, getHumanChoice);
-  }
+function checkWinner(humanscore, computerScore){
+   if (humanScore === 5 || computerScore === 5) {
+        const finalScore = document.createElement("div");
+        finalScore.textContent = humanScore === 5 ? "Congrats, you've won" : "Tough luck... Computer won";
+        container.appendChild(finalScore);
 
-switch (true){
-    case computerScore > humanScore:
-        alert(`Computer score: ${computerScore} Human score: ${humanScore}\n
-        Computer Wins!`);
-        break;
-    case computerScore < humanScore:
-        alert(`Computer score: ${computerScore} Human score: ${humanScore}\n
-        Human Wins!`);
-        break;
+        // Disable buttons after the game ends
+        rockBtn.disabled = true;
+        paperBtn.disabled = true;
+        scissorsBtn.disabled = true;
+    }
 }
